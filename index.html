@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHNA CHAUHAN | Director of Photography</title>
+    
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Inter:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-black: #0a0a0a;
+            --card-bg: #141414;
+            --text-main: #e5e5e5;
+            --text-dim: #888888;
+            --accent: #ff3b3b;
+            --mono-font: 'IBM Plex Mono', monospace;
+            --heading-font: 'Space Grotesk', sans-serif;
+            --body-font: 'Inter', sans-serif;
+            --transition-smooth: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; background-color: var(--bg-black); color: var(--text-main); font-family: var(--body-font); }
+        body { overflow-x: hidden; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .section-padding { padding: 140px 0; }
+
+        /* Film Grain Effect */
+        .film-grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png");
+            opacity: 0.05; pointer-events: none; z-index: 9999; animation: grain 8s steps(10) infinite;
+        }
+        @keyframes grain {
+            0%, 100% { transform:translate(0, 0) }
+            10% { transform:translate(-5%, -10%) }
+            30% { transform:translate(7%, -25%) }
+            50% { transform:translate(-15%, 10%) }
+            70% { transform:translate(0%, 15%) }
+            90% { transform:translate(-10%, 10%) }
+        }
+
+        /* Custom Reticle Cursor */
+        .cursor {
+            width: 20px; height: 20px; border: 1px solid var(--text-main); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 10000;
+            display: flex; align-items: center; justify-content: center; mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+        .cursor.active { width: 100px; height: 100px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+        .cursor-label { font-family: var(--mono-font); font-size: 10px; display: none; }
+        .cursor.active .cursor-label { display: block; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 40px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        }
+        .nav-logo { font-family: var(--heading-font); font-weight: 700; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 40px; font-family: var(--mono-font); font-size: 0.7rem; letter-spacing: 2px; }
+        .nav-links a { opacity: 0.6; transition: 0.3s; }
+        .nav-links a:hover { opacity: 1; }
+
+        /* Hero Section */
+        .hero { height: 100vh; position: relative; display: flex; align-items: center; overflow: hidden; }
+        .hero-visual { position: absolute; inset: 0; z-index: 1; background: #111; }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); }
+        
+        .viewfinder { position: absolute; inset: 60px; pointer-events: none; z-index: 2; }
+        .corner { position: absolute; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.3); }
+        .tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+        .tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+        .bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+        .br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+        .hero-content { position: relative; z-index: 3; width: 100%; padding: 0 60px; }
+        .hero-metadata { font-family: var(--mono-font); font-size: 10px; color: var(--text-dim); margin-bottom: 20px; }
+        .hero h1 { font-family: var(--heading-font); font-size: clamp(3rem, 10vw, 8rem); line-height: 0.85; font-weight: 700; margin-bottom: 30px; }
+        .hero-subline { font-family: var(--mono-font); font-size: 1rem; color: var(--text-dim); text-transform: uppercase; }
+
+        /* Work Grid */
+        .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px 40px; }
+        .project-card.large { grid-column: span 2; }
+        .img-wrapper { position: relative; aspect-ratio: 16/9; background: #1a1a1a; overflow: hidden; margin-bottom: 20px; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s ease; }
+        .project-card:hover img { transform: scale(1.05); }
+        .project-info span { font-family: var(--mono-font); font-size: 11px; color: var(--accent); }
+        .project-title { font-family: var(--heading-font); font-size: 2rem; margin: 10px 0; }
+        .project-desc { color: var(--text-dim); font-size: 0.9rem; max-width: 500px; }
+
+        /* Experience Timeline */
+        .timeline { margin-top: 100px; border-top: 1px solid #222; }
+        .timeline-item { display: flex; justify-content: space-between; padding: 40px 0; border-bottom: 1px solid #222; }
+        .timeline-role { font-family: var(--heading-font); font-size: 1.5rem; }
+        .timeline-meta { font-family: var(--mono-font); font-size: 12px; color: var(--text-dim); }
+
+        /* Marquee */
+        .marquee { background: var(--text-main); color: var(--bg-black); padding: 40px 0; overflow: hidden; white-space: nowrap; margin: 100px 0; }
+        .marquee-content { display: inline-block; animation: scroll 40s linear infinite; font-family: var(--heading-font); font-weight: 900; font-size: 3rem; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* Contact Section */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; }
+        .large-title { font-family: var(--heading-font); font-size: 4rem; line-height: 1; }
+        .contact-form input, .contact-form textarea { width: 100%; background: #111; border: 1px solid #222; padding: 20px; color: #fff; font-family: var(--mono-font); margin-bottom: 20px; outline: none; }
+        .contact-form input:focus { border-color: var(--text-main); }
+        .btn { background: var(--text-main); color: var(--bg-black); padding: 20px 40px; font-family: var(--mono-font); border: none; font-size: 12px; letter-spacing: 2px; }
+
+        /* Reveal Animation */
+        .reveal { opacity: 0; transform: translateY(50px); transition: var(--transition-smooth); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 900px) {
+            .contact-grid, .work-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hero-content { padding: 0 20px; }
+            .viewfinder { inset: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="film-grain"></div>
+    <div class="cursor" id="cursor"><span class="cursor-label">VIEW</span></div>
+
+    <nav>
+        <div class="nav-logo">KRISHNA CHAUHAN</div>
+        <div class="nav-links">
+            <a href="#work">SELECTED WORK</a>
+            <a href="#about">THE VISION</a>
+            <a href="#contact">CONTACT</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-visual">
+            <!-- Replace with assets/hero.jpg -->
+            <img src="https://images.unsplash.com/photo-1492691523567-f73b3f6c0f37?q=80&w=2070" class="hero-img" alt="Hero">
+            <div class="viewfinder">
+                <div class="corner tl"></div><div class="corner tr"></div>
+                <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-metadata">
+                BASE: DELHI-NCR / IN &nbsp;&nbsp; ROLE: DIRECTOR OF PHOTOGRAPHY
+            </div>
+            <h1>EVERY FRAME<br>HAS A DECISION.</h1>
+            <p class="hero-subline">Not just the camera. The man with a vision behind it.</p>
+        </div>
+    </section>
+
+    <section class="section-padding container">
+        <div class="reveal">
+            <h2 class="large-title" style="margin-bottom: 40px;">I DON’T JUST CAPTURE IMAGES.<br><span style="opacity: 0.3;">I SHAPE HOW THEY FEEL.</span></h2>
+            <p style="font-size: 1.5rem; max-width: 800px; color: var(--text-dim);">Cinematography is the bridge between script and emotion. Every choice—the texture of the light, the speed of the pan, the depth of the field—is a narrative tool.</p>
+        </div>
+    </section>
+
+    <section id="work" class="section-padding container">
+        <div class="work-grid">
+            <!-- Project 1 -->
+            <div class="project-card large reveal">
+                <div class="img-wrapper">
+                    <!-- Replace with assets/sky-jumper.jpg -->
+                    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2070" alt="Sky Jumper">
+                </div>
+                <div class="project-info">
+                    <span>DOP & PRODUCER // 2024</span>
+                    <h3 class="project-title">SKY JUMPER TRAMPOLINE PARK</h3>
+                    <p class="project-desc">A high-energy commercial campaign focusing on dynamic camera movement and physical rhythm.</p>
+                    <a href="https://www.instagram.com/reel/DcsMtBiTqNe/" style="color: var(--accent); font-family: var(--mono-font); font-size: 10px; margin-top: 15px; display: block;">VIEW ON INSTAGRAM ↗</a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card reveal">
+                <div class="img-wrapper">
+                    <!-- Replace with assets/nazar.jpg -->
+                    <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=2070" alt="Nazar">
+                </div>
+                <div class="project-info">
+                    <span>DIRECTOR OF PHOTOGRAPHY // 2023</span>
+                    <h3 class="project-title">NAZAR</h3>
+                    <p class="project-desc">Narrative film exploring atmospheric storytelling.</p>
+                    <a href="https://youtu.be/MiFdvHLwWDk" style="color: var(--accent); font-family: var(--mono-font); font-size: 10px; margin-top: 15px; display: block;">WATCH FILM ↗</a>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card reveal">
+                <div class="img-wrapper">
+                    <!-- Replace with assets/jamuna-paar.jpg -->
+                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=2059" alt="Jamuna Paar">
+                </div>
+                <div class="project-info">
+                    <span>DIRECTOR OF PHOTOGRAPHY</span>
+                    <h3 class="project-title">JAMUNA PAAR</h3>
+                    <p class="project-desc">Independent narrative project shaped by location mood.</p>
+                    <a href="https://youtu.be/ZcgZuXIpVQY" style="color: var(--accent); font-family: var(--mono-font); font-size: 10px; margin-top: 15px; display: block;">WATCH PROJECT ↗</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            LIGHT CREATES MOOD &nbsp; // &nbsp; FRAMING CREATES MEANING &nbsp; // &nbsp; MOVEMENT CREATES ENERGY &nbsp; // &nbsp;
+            LIGHT CREATES MOOD &nbsp; // &nbsp; FRAMING CREATES MEANING &nbsp; // &nbsp; MOVEMENT CREATES ENERGY &nbsp; // &nbsp;
+        </div>
+    </div>
+
+    <section id="about" class="section-padding container">
+        <div class="reveal">
+            <span style="font-family: var(--mono-font); color: var(--accent);">CREDITS & EXPERIENCE</span>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-role">Filmmaker & DOP</div>
+                    <div class="timeline-meta">Independent Narrative & Commercial</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-role">Production Assistant</div>
+                    <div class="timeline-meta">The Jungle Book (International Production)</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-role">Assistant Cinematographer</div>
+                    <div class="timeline-meta">Branded Commercial Productions</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-role">Cinematographer</div>
+                    <div class="timeline-meta">District by Zomato (Delhi-NCR)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding container">
+        <div class="contact-grid">
+            <div class="reveal">
+                <h2 class="large-title">LET’S CREATE THE <span style="color: var(--accent);">FRAME</span> THAT MATTERS.</h2>
+                <div style="margin-top: 40px; font-family: var(--mono-font);">
+                    <p>krrishna.work.yt@gmail.com</p>
+                    <p>+91 7830047901</p>
+                    <div style="margin-top: 20px; display: flex; gap: 20px;">
+                        <a href="https://www.instagram.com/_krrishna_chauhan/">INSTAGRAM</a>
+                        <a href="https://www.linkedin.com/in/-krrishna-chauhan/">LINKEDIN</a>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form reveal">
+                <form action="mailto:krrishna.work.yt@gmail.com" method="post" enctype="text/plain">
+                    <input type="text" name="name" placeholder="YOUR NAME" required>
+                    <input type="email" name="email" placeholder="EMAIL" required>
+                    <textarea name="message" rows="5" placeholder="TELL ME ABOUT THE VISION"></textarea>
+                    <button type="submit" class="btn">CUT TO: START PROJECT</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 40px; text-align: center; border-top: 1px solid #222; font-family: var(--mono-font); font-size: 10px; color: var(--text-dim);">
+        © 2024 KRISHNA CHAUHAN // DIRECTOR OF PHOTOGRAPHY
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cursor movement
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Hover effects
+            const cards = document.querySelectorAll('.project-card, .btn, a');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => cursor.classList.add('active'));
+                card.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+            });
+
+            // Intersection Observer for reveals
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
